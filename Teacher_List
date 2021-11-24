@@ -1,0 +1,31 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WindowsFormsApp1
+{
+    class Teacher_List
+    {
+        private List<Teacher> list_taec = new List<Teacher>();
+        private short size_list_teacher = 0;
+        public Teacher Teacher_list
+        {
+            set { list_taec.Add(value);
+                size_list_teacher++;
+            }
+
+
+        }
+        public short Size_list_teacher
+        {
+            get { return size_list_teacher; }
+        }
+        public Teacher GetTeacher(short N)
+        {
+            return list_taec[N];
+        }
+
+    }
+}
