@@ -1,0 +1,153 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+using System.Windows.Forms.DataVisualization.Charting;
+
+namespace WindowsFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        /* Teacher teacher = new Teacher(34, 175, 40, "Valentina", "Petrovna", "Pushkina","Odin" );
+         Teacher teacher1 = new Teacher(26, 167, 23, "Valentin", "Petrov", "Blac Hole", "Dva");
+        */
+    
+
+        Teacher_List teacher_list = new Teacher_List();
+
+
+        public struct User
+        {
+            public string name;
+            public int age;
+
+            public User(string _name, int _age)
+            {
+                name = _name;
+                age = _age;
+            }
+        }
+        List<User> users = new List<User>();
+        
+        public Form1()
+        {
+            InitializeComponent();
+            
+        }
+
+        public void tree_View()
+        {
+            //TreeNode rot = new TreeNode("list_h");
+            // this.treeView1.Nodes.Add(rot);
+            //rot.Nodes.Add(new TreeNode("Human"));
+            //treeView1.Nodes.Add(rot);
+            treeView1.BeginUpdate();
+            treeView1.Nodes.Add(teacher_list.GetTeacher(0).Name);
+            treeView1.Nodes.Add(teacher_list.GetTeacher(1).Name);
+            for (short i = 0; i < teacher_list.Size_list_teacher; i++)
+            {
+                for (short j = 0; j < teacher_list.GetTeacher(i).Get_List_students().Length; j++)
+                {
+                    treeView1.Nodes[i].Nodes.Add(teacher_list.GetTeacher(i).Get_Course_students(j).Name);
+                }
+            }
+            /* treeView1.Nodes[1].Nodes.Add(teacher_list.GetTeacher(0).Get_Course_students(0).Name);
+             treeView1.Nodes[1].Nodes.Add(teacher_list.GetTeacher(0).Get_Course_students(1).Name);
+             treeView1.Nodes[0].Nodes.Add(teacher_list.GetTeacher(0).Get_Course_students(2).Name);
+             treeView1.Nodes[0].Nodes.Add(teacher_list.GetTeacher(0).Get_Course_students(3).Name);*/
+            treeView1.EndUpdate();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            teacher_list.Teacher_list = new Teacher(34, 175, 40, "Valentina", "Petrovna", "Pushkina");
+            teacher_list.Teacher_list = new Teacher(26, 167, 23, "Valentin", "Petrov", "Pushkina");
+            // Student student1 = new Student(17, 180, 11, "Vaas", "Montenegro", "Svamp");
+            //Student student2 = new Student(17, 180, 15, "Miki", "Maus", "Svamp");
+            teacher_list.GetTeacher(0).Course_students = new Student(17, 175, 11, "Vas","Mon","S");
+            teacher_list.GetTeacher(1).Course_students = new Student(16, 170, 15, "Mk","Ms","S");
+            teacher_list.GetTeacher(1).Course_students = new Student(18, 178, 17, "ki","Mc","S");
+            teacher_list.GetTeacher(0).Course_students = new Student(19, 169, 12, "Mx","Mv","S");
+            teacher_list.GetTeacher(1).Course_students = new Student(16, 177, 15, "Mi","Mb","S");
+            teacher_list.GetTeacher(0).Course_students = new Student(17, 180, 11, "Vs","Mn","S");
+            tree_View();
+           // button1.Text = Convert.ToString(student1.Average_score);
+           // button2.Text = Convert.ToString(student2.Average_score);
+
+            DataTable table = new DataTable();
+
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Surname", typeof(string));
+            
+            
+            for (short i = 0; i < teacher_list.Size_list_teacher; i++)
+            {
+                table.Rows.Add(teacher_list.GetTeacher(i).Name, teacher_list.GetTeacher(i).Surname);
+            }
+
+            for (short i = 0; i < teacher_list.Size_list_teacher; i++)
+            {
+                for (short j = 0; j < teacher_list.GetTeacher(i).Get_List_students().Length; j++)
+                {
+                    for (short p = 0; p < j + i; p++)
+                    {
+                        teacher_list.GetTeacher(i).Get_Course_students(j).Number();
+                    }
+                }
+            }
+            
+           /* teacher_list.GetTeacher(0).Get_Course_students(3).Number();
+            teacher_list.GetTeacher(0).Get_Course_students(3).Number();
+            teacher_list.GetTeacher(0).Get_Course_students(3).Number();
+            teacher_list.GetTeacher(0).Get_Course_students(2).Number();
+            teacher_list.GetTeacher(0).Get_Course_students(2).Number();
+            teacher_list.GetTeacher(0).Get_Course_students(1).Number();*/
+            dataGridView1.DataSource = table;
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            panel1.Visible = true;
+            panel1.Enabled = true;
+            chart1.Series.Clear();
+            listBox1.Items.Clear();
+            for (short i = 0; i < teacher_list.Size_list_teacher; i++)
+            {
+                for (short j = 0; j < teacher_list.GetTeacher(i).Get_List_students().Length; j++)
+                {
+                    Series series = this.chart1.Series.Add(teacher_list.GetTeacher(i).Get_Course_students(j).Name);
+
+                    series.Points.Add(teacher_list.GetTeacher(i).Get_Course_students(j).Average_score);
+                    listBox1.Items.Add(teacher_list.GetTeacher(i).Get_Course_students(j).Surname + "\t" + teacher_list.GetTeacher(i).Get_Course_students(j).Name);
+                    //series.Points.Add(j);
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            panel1.Visible = false;
+            panel1.Enabled = false;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+            listBox1.Items.Clear();
+
+            for (short i = 0; i < teacher_list.Size_list_teacher; i++)
+            {
+                for (short j = 0; j < teacher_list.GetTeacher(i).Get_List_students().Length; j++)
+                {
+                    listBox1.Items.Add(teacher_list.GetTeacher(i).Get_Course_students(j).Surname +"\t"+ teacher_list.GetTeacher(i).Get_Course_students(j).Name );
+                }
+            }
+        }
+    }
+}
